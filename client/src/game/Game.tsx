@@ -1,8 +1,4 @@
-class Board {
-    PLAYER: 0 = 0;
-    OPPONENT: 1 = 1;
-    EMPTY: -1 = -1;
-
+export class Board {
     winPatterns = [
         // Horizontal
         [0, 1, 2],
@@ -27,16 +23,16 @@ class Board {
 
     checkWinner(): null | 0 | 1 {
         for (const pattern of this.winPatterns) {
-            const playerWinner = pattern.every(position => this.positions[position] === this.PLAYER);
+            const playerWinner = pattern.every(position => this.positions[position] === Game.PLAYER);
             
             if (playerWinner) {
-                return this.PLAYER;
+                return Game.PLAYER;
             }
 
-            const opponentWinner = pattern.every(position => this.positions[position] === this.OPPONENT);
+            const opponentWinner = pattern.every(position => this.positions[position] === Game.OPPONENT);
 
             if (opponentWinner) {
-                return this.OPPONENT;
+                return Game.OPPONENT;
             }
         }
 
@@ -44,7 +40,7 @@ class Board {
     }
 
     setPosition(index: number, player: 0 | 1) {
-        if (![this.PLAYER, this.OPPONENT].includes(player)) {
+        if (![Game.PLAYER, Game.OPPONENT].includes(player)) {
             throw new Error(`player must either be 0 or 1, got ${player}`)
         }
 
@@ -52,7 +48,7 @@ class Board {
             throw new Error(`index must be between 0 and 8, got ${index}`);
         }
 
-        if (this.positions[index] !== this.EMPTY) {
+        if (this.positions[index] !== Game.EMPTY) {
             throw new Error(`illegal move. moving ${player} to position ${index} with board ${this.positions}`)
         }
 
@@ -64,6 +60,10 @@ class Game {
     currentTurn: 0 | 1 | null;
     firstMove: 0 | 1 | null;
     board: Board;
+
+    static PLAYER: 0 = 0;
+    static OPPONENT: 1 = 1;
+    static EMPTY: -1 = -1;
 
     constructor() {
         this.currentTurn = null;
@@ -92,7 +92,7 @@ class Game {
             throw new Error("game has not been initialized");
         }
 
-        this.currentTurn = this.currentTurn === this.board.PLAYER ? this.board.OPPONENT : this.board.PLAYER;
+        this.currentTurn = this.currentTurn === Game.PLAYER ? Game.OPPONENT : Game.PLAYER;
     }
 
     setMove(index: number, player: 0 | 1) {
@@ -108,7 +108,7 @@ class Game {
             return;
         }
 
-        alert(`Winner: ${winner === this.board.PLAYER ? "You" : "Opponent"}`)
+        alert(`Winner: ${winner === Game.PLAYER ? "You" : "Opponent"}`)
     }
 }
 
