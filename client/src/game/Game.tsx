@@ -41,29 +41,34 @@ export class Board {
 
     setPosition(index: number, player: 0 | 1) {
         if (![Game.PLAYER, Game.OPPONENT].includes(player)) {
-            throw new Error(`player must either be 0 or 1, got ${player}`)
+            return console.warn(`player must either be 0 or 1, got ${player}`)
         }
 
         if (index < 0 || index > 8) {
-            throw new Error(`index must be between 0 and 8, got ${index}`);
+            return console.warn(`index must be between 0 and 8, got ${index}`);
         }
 
         if (this.positions[index] !== Game.EMPTY) {
-            throw new Error(`illegal move. moving ${player} to position ${index} with board ${this.positions}`)
+            return console.warn(`illegal move. moving ${player} to position ${index} with board ${this.positions}`)
         }
 
         this.positions[index] = player;
     }
 }
 
+export type Player = 0;
+export type Opponent = 1;
+export type Empty = -1;
+export type PlayerOrOpponent = Player | Opponent;
+
 class Game {
-    currentTurn: 0 | 1 | null;
-    firstMove: 0 | 1 | null;
+    currentTurn: PlayerOrOpponent | null;
+    firstMove: PlayerOrOpponent | null;
     board: Board;
 
-    static PLAYER: 0 = 0;
-    static OPPONENT: 1 = 1;
-    static EMPTY: -1 = -1;
+    static PLAYER: Player = 0;
+    static OPPONENT: Opponent = 1;
+    static EMPTY: Empty = -1;
 
     constructor() {
         this.currentTurn = null;
@@ -81,34 +86,32 @@ class Game {
 
     setStartingPlayer(player: 0 | 1) {
         if (player < 0 || player > 1) {
-            throw new Error(`player must be 0 or 1, got ${player}`);
+            return console.warn(`player must be 0 or 1, got ${player}`);
         }
 
         this.currentTurn = player;
+        this.firstMove = player;
     }
 
     nextPlayer() {
         if (this.hasBeenInitialized()) {
-            throw new Error("game has not been initialized");
+            return console.warn("game has not been initialized");
         }
 
         this.currentTurn = this.currentTurn === Game.PLAYER ? Game.OPPONENT : Game.PLAYER;
     }
 
-    setMove(index: number, player: 0 | 1) {
+    setMove(index: number): void {
         if (this.hasBeenInitialized()) {
-            throw new Error("game has not been initialized");
+            return console.warn("game has not been initialized");
         }
 
-        this.board.setPosition(index, player);
+        // The if statement above will verify that this is not null
+        let currentTurn = this.currentTurn as PlayerOrOpponent;
 
-        const winner = this.checkWinner();
+        this.board.setPosition(index, currentTurn);
 
-        if (winner === null) {
-            return;
-        }
-
-        alert(`Winner: ${winner === Game.PLAYER ? "You" : "Opponent"}`)
+        this.nextPlayer();
     }
 }
 
