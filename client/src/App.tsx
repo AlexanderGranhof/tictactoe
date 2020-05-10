@@ -1,6 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Socket from "./socket/Socket";
+
+console.log(Socket);
 
 function App() {
   return (
