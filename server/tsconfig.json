@@ -8,9 +8,13 @@
         "declaration": true,
         "strict": true,
         "module": "CommonJS",
+        "sourceMap": true,
+        "types": [
+            "node"
+        ]
     },
     "include": [
-        "src/index.ts"
+        "src"
     ],
     "exclude": [
         "node_modules"
