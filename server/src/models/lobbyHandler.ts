@@ -3,7 +3,7 @@ interface LobbyConstructor {
     createdBy: string,
 }
 
-class Lobby {
+class Room {
     id: string;
     createdAt: Date;
     createdBy: string;
@@ -16,7 +16,7 @@ class Lobby {
 }
 
 class LobbyHandler {
-    private lobbies: { [key: string]: Lobby }
+    private lobbies: { [key: string]: Room }
 
     constructor() {
         this.lobbies = {};
@@ -44,14 +44,14 @@ class LobbyHandler {
         return Object.keys(this.lobbies).includes(id);
     }
 
-    createLobby(createdBySocketID: string): Lobby {
+    createLobby(createdBySocketID: string): Room {
         let id = LobbyHandler.generateLobbyID();
 
         while (this.lobbyExists(id)) {
             id = LobbyHandler.generateLobbyID();
         }
         
-        const lobby = new Lobby({ id, createdBy: createdBySocketID });
+        const lobby = new Room({ id, createdBy: createdBySocketID });
 
         this.lobbies[id] = lobby;
 
