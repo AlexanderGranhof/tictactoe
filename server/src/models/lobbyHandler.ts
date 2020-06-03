@@ -44,14 +44,18 @@ class LobbyHandler {
         return Object.keys(this.lobbies).includes(id);
     }
 
-    createLobby(createdBySocketID: string) {
+    createLobby(createdBySocketID: string): Lobby {
         let id = LobbyHandler.generateLobbyID();
 
         while (this.lobbyExists(id)) {
             id = LobbyHandler.generateLobbyID();
         }
+        
+        const lobby = new Lobby({ id, createdBy: createdBySocketID });
 
-        this.lobbies[id] = new Lobby({ id, createdBy: createdBySocketID })
+        this.lobbies[id] = lobby;
+
+        return lobby;
     }
 
     removeLobby(id: string) {
@@ -64,3 +68,5 @@ class LobbyHandler {
         return lobbyExists
     }
 }
+
+export default LobbyHandler
