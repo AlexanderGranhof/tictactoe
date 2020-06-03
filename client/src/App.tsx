@@ -1,12 +1,16 @@
 import React from 'react';
-import Socket from "./socket/Socket";
-import Grid from "./components/grid/Grid";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-Socket.connect();
+import Grid from "./components/grid/Grid";
+import Lobby from "./views/Lobby/Lobby";
 
 function App() {
     return (
-        <Grid />
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={Lobby} />
+            </Switch>
+        </BrowserRouter>
     );
 }
 
