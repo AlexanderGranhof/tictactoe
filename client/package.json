@@ -13,6 +13,7 @@
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "socket.io-client": "^2.3.0",
     "typescript": "^3.7.5"
@@ -39,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.1.5",
     "@types/socket.io-client": "^1.4.32"
   }
 }
