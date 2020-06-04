@@ -1,13 +1,50 @@
+:root {
+    --light-gray: #f2f2f2;
+    --dark-gray: #aeaeaf;
+    --black: #1e1e1f;
+    --blue: #175a9e;
+    --yellow: #fed352;
+    --pink: #e46c6d;
+    --cyan: #5ee4f1;
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    background-color: var(--light-gray);
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace;
+}
+
+main.page {
+    /* pointer-events: ; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.page-fade-appear,
+.page-fade-enter {
+    opacity: 0;
+    z-index: 1;
+}
+
+.page-fade-appear-active,
+.page-fade-enter.page-fade-enter-active {
+    opacity: 1;
+    transition: opacity 300ms linear 150ms;
+}
+
+.page-fade-exit {
+    opacity: 1;
+}
+
+.page-fade-exit.page-fade-exit-active {
+    opacity: 0;
+    transition: opacity 150ms linear;
 }
