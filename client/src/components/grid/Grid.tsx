@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import "./Grid.scss";
 import Game, { Board, Player, Opponent, Empty } from "../../game/Game";
+import GameState from "../../models/game";
+import "./Grid.scss";
 
 const getSquareIcon = (position: -1 | 0 | 1) => {
     switch(position) {
@@ -24,11 +25,17 @@ const Grid = () => {
     const [ game, setGame ]: [Game | undefined, Dispatch<SetStateAction<Game | undefined>>] = useState();
     const [ grid, setGrid ]: [ Array<Empty | Player | Opponent>, Dispatch<SetStateAction<Array<Empty | Player | Opponent>>> ] = useState([-1, -1, -1, -1, -1, -1, -1, -1, -1] as Array<Empty | Player | Opponent>);
 
+    const [ state, setState ]: [undefined | GameState, Dispatch<SetStateAction<GameState | undefined>>] = useState();
+
+    // [GameState | undefined, Dispatch<SetStateAction<GameState | undefined>>]
+    // [GameState | undefined, SetStateAction<GameState | undefined>]
     useEffect(() => {
         const game = new Game();
+        const gamestate = new GameState();
         game.setStartingPlayer(Game.PLAYER);
 
         setGame(game);
+        setState(gamestate);
     }, []);
 
     const handleSquareClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -52,14 +59,16 @@ const Grid = () => {
 
 
     return (
-        <div className="grid">
-            {
-                grid.map((postion, index) => (
-                    <div data-position={index} onClick={handleSquareClick} key={index} className="square">{getSquareIcon(postion)}</div>
-                ))
-                
-            }
-        </div>
+        <main className="page">
+            <div className="grid">
+                {
+                    grid.map((postion, index) => (
+                        <div data-position={index} onClick={handleSquareClick} key={index} className="square">{getSquareIcon(postion)}</div>
+                    ))
+                    
+                }
+            </div>
+        </main>
     )
 };
 
