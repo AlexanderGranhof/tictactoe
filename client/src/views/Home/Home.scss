@@ -1,0 +1,141 @@
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(-20%)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+.welcome-box {
+    position: relative;
+    width: 100%;
+    width: 100vw;
+    height: 100vh;
+
+    .welcome-inputs {
+        position: absolute;
+        top: 20%;
+        width: 100%;
+
+        .welcome-title {
+            transition: opacity 1s, transform 1s;
+        }
+
+        
+    
+        .welcome-username {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            text-align: center;
+            background-color: transparent;
+            outline: none;
+            // opacity: 0;
+            // animation: fade-in 1s forwards 1.2s;
+            outline: none;
+            border: none;
+        }
+    }
+
+}
+
+main.page.welcome-fade {
+    opacity: 1;
+    z-index: 1;
+
+    &.page-fade-exit {
+        .welcome-title {
+            opacity: 1;
+            transform: translateY(-50%);
+        }
+    }
+    
+    &.page-fade-exit.page-fade-exit-active {
+        .welcome-title {
+            transition: opacity 150ms, transform 150ms;
+            opacity: 0;
+            transform: translateY(-80%);
+        }
+
+        .welcome-box {
+            transition: opacity 150ms, transform 150ms;
+            opacity: 0;
+        }
+    }
+}
+
+.welcome-title {
+    margin: 0;
+    font-weight: lighter;
+    color: #aeaeaf;
+    color: var(--black);
+    font-size: 4rem;
+    opacity: 0;
+    // animation: slide-up 1s forwards 0.8s;
+    text-align: center;
+}
+
+.myFade-appear {
+    opacity: 0;
+    transform: translateY(-20%);
+}
+
+.myFade-appear.myFade-appear-active {
+    opacity: 1;
+    transform: translateY(-50%);
+    transition:
+            opacity 1s ease 0.5s,
+            transform 1s ease 0.5s;
+}
+
+.myFade-appear-done {
+    transform: translateY(-50%);
+    opacity: 1;
+}
+
+// .fade-enter {
+//     opacity: 0;
+//     transform: translateY(-20%);
+// }
+
+// .fade-enter.fade-enter-active {
+//     opacity: 1;
+//     transform: translateY(-50%);
+//     transition: opacity, transform 1s linear;
+// }
+
+// .fade-enter-done {
+//     opacity: 1;
+//     transform: translateY(-50%);
+// }
+
+// .fade-exit {
+//     opacity: 1;
+// }
+
+// .fade-exit.fade-exit.active {
+//     opacity: 0;
+//     transition: opacity, transform 300ms linear;
+//     transform: translateY(-90%);
+// }
+
+// .fade-exit-done {
+//     transform: translateY(-90%);
+//     opacity: 0;
+// }
