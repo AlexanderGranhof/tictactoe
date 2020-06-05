@@ -11,6 +11,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     const [userState] = useContext(userContext);
     const [rooms, setRooms] = useState({});
     const [ filteredRooms, setFilteredRooms ] = useState({});
+    const [ roomSearch, setRoomSearch ] = useState("");
     const { history } = props;
 
     const cleanup = () => {
@@ -58,27 +59,25 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     }
 
     const handleRoomsFilter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        const isEnter = event.key === "Enter";
         const search = event.currentTarget.value.toLowerCase();
+        setRoomSearch(search);
 
-        // if (isEnter) {
-            if (search === "") {
-                return setFilteredRooms({});
+        if (search === "") {
+            return setFilteredRooms({});
+        }
+
+        const filteredRooms = Object.entries(rooms).reduce((prev, row) => {
+            const [key, value]: [string, any] = row;
+            const name = value.hostname.toLowerCase();
+
+            if (name.includes(search)) {
+                return {...prev, [key]: value}
             }
 
-            const filteredRooms = Object.entries(rooms).reduce((prev, row) => {
-                const [key, value]: [string, any] = row;
-                const name = value.hostname.toLowerCase();
+            return prev;
+        }, {});
 
-                if (name.includes(search)) {
-                    return {...prev, [key]: value}
-                }
-
-                return prev;
-            }, {});
-
-            setFilteredRooms(filteredRooms);
-        // }
+        setFilteredRooms(filteredRooms);
     }
 
     return (
@@ -88,7 +87,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
                 <div className="two-col-grid">
                     <div className="controls">
                         <span className="left light hint">search rooms or play against a bot</span>
-                        <Input id="room-filter" label="search rooms" onKeyDown={handleRoomsFilter} />
+                        <Input id="room-filter" label="search rooms" onKeyUp={handleRoomsFilter} />
                         <button className="large blue" onClick={handleRoomCreate}>Create Room</button>
                     </div>
                     <div className="tables">
@@ -97,7 +96,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
                             emptyComponent={noRoomsComponent}
                             className="lobbies"
                             rowClick={handleRowClick}
-                            data={Object.keys(filteredRooms).length ? Object.values(filteredRooms) : Object.values(rooms)}
+                            data={roomSearch.length ? Object.values(filteredRooms) : Object.values(rooms)}
                             sort={(a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()}
                             rowKeyIndex="id"
                             columns={[{ title: "room", key: "id", index: "id", render }, { title: "name", key: "hostname", index: "hostname", render }]}
