@@ -31,11 +31,15 @@
 }
 
 .table-component {
-
+    border-collapse: collapse;
+    
     th,td {
         padding: 16px;
-        border-bottom: 1px solid #f0f0f0;;
         font-size: 14px;
+    }
+    
+    tr {
+        border-bottom: 1px solid #f0f0f0;
     }
 
     th {

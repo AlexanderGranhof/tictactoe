@@ -1,32 +1,37 @@
 import React, { FunctionComponent, CSSProperties } from "react";
-import { CSSTransition } from "react-transition-group";
 import "./Table.scss";
 
 interface TableProps {
-    keyIndex?: string,
+    rowKeyIndex?: string,
     data: any[],
-    style?: CSSProperties
-    rowClass?: (row: any, column: any) => void
+    style?: CSSProperties,
+    className?: string,
+    emptyComponent?: FunctionComponent
+    rowClass?: (row: any, column: any) => string
     rowClick?: (row: any, column: any) => void
-    columns: [
-        {
-            title: string,
-            index: string,
-            key?: string,
-            render?: (row: any, column: any) => void
-        }
-    ]
+    sort?: (a:any, b:any) => number
+    columns: {
+        title: string,
+        index: string,
+        key?: string,
+        render?: (row: any, column: any) => void
+    }[]
 }
 
 const Table: FunctionComponent<TableProps> = props => {
     const columns = props.columns || [];
-    const data = props.data || [];
-    const { keyIndex, rowClass, rowClick } = props;
+    let data = props.data || [];
+    const { rowKeyIndex, rowClass, rowClick, sort } = props;
+    const EmptyComponent = props.emptyComponent;
+
+    if (typeof sort === "function") {
+        data = data.sort(sort);
+    }
 
     return (
-        <table style={props.style} className="table-component">
+        <table style={props.style} className={`table-component ${props.className ? props.className : ""}`}>
             <thead>
-                <tr key={123}>
+                <tr>
                     { columns.map((row, index) => {
                         return <th key={row.index}>{row.title}</th> 
                     }) }
@@ -34,8 +39,8 @@ const Table: FunctionComponent<TableProps> = props => {
             </thead>
             <tbody>
                 {
-                    data.map((row: any) => (
-                            <tr key={keyIndex && row[keyIndex]}>
+                    data.length ? data.map((row: any) => (
+                            <tr key={rowKeyIndex && row[rowKeyIndex]}>
                                 {
                                     columns.map((column, rowIndex) => {
                                         const { key, index, render } = column;
@@ -66,14 +71,14 @@ const Table: FunctionComponent<TableProps> = props => {
                                             rowProps.onClick = () => rowClick(row, column)
                                         }
 
-                                        const rowKey = keyIndex ? row[keyIndex] : key === undefined ? rowIndex : row[key]
+                                        const rowKey = key === undefined ? rowKeyIndex ? row[rowKeyIndex] : rowIndex : row[key]
 
                                         return ( <td {...rowProps} key={rowKey}>{ value }</td> );
                                     })
                                 }
                             </tr>
                         )
-                    )
+                    ) : EmptyComponent ? <tr><td><EmptyComponent /></td></tr> : null
                 }
             </tbody>
 
