@@ -36,8 +36,6 @@
             transition: opacity 1s, transform 1s;
         }
 
-        
-    
         .welcome-username {
             position: absolute;
             left: 50%;
@@ -50,6 +48,15 @@
             // animation: fade-in 1s forwards 1.2s;
             outline: none;
             border: none;
+            padding: 10px;
+            width: 52px;
+
+            transition: color 300ms, box-shadow 300ms, width 80ms ease-out;
+
+            &.bad-word {
+                box-shadow: 0 10px 5px -10px var(--red);
+                color: var(--red);
+            }
         }
     }
 
@@ -84,11 +91,16 @@ main.page.welcome-fade {
     margin: 0;
     font-weight: lighter;
     color: #aeaeaf;
-    color: var(--black);
+    color: var(--light-black);
     font-size: 4rem;
     opacity: 0;
     // animation: slide-up 1s forwards 0.8s;
     text-align: center;
+}
+
+.welcome-username {
+    color: var(--dark-gray);
+    text-transform: capitalize;
 }
 
 .myFade-appear {
@@ -109,33 +121,42 @@ main.page.welcome-fade {
     opacity: 1;
 }
 
-// .fade-enter {
-//     opacity: 0;
-//     transform: translateY(-20%);
-// }
+.error-title {
+    opacity: 0;
+    text-align: center;
+    color: var(--red);
+    font-weight: 400;
+    transition: opacity 300ms, transform 300ms;
 
-// .fade-enter.fade-enter-active {
-//     opacity: 1;
-//     transform: translateY(-50%);
-//     transition: opacity, transform 1s linear;
-// }
+}
 
-// .fade-enter-done {
-//     opacity: 1;
-//     transform: translateY(-50%);
-// }
+.bad-word-enter {
+    opacity: 0;
+    transform: translateY(20%);
+}
 
-// .fade-exit {
-//     opacity: 1;
-// }
+.bad-word-enter.bad-word-enter-active {
+    opacity: 1;
+    transform: translateY(0%);
+}
 
-// .fade-exit.fade-exit.active {
-//     opacity: 0;
-//     transition: opacity, transform 300ms linear;
-//     transform: translateY(-90%);
-// }
+.bad-word-enter-done {
+    opacity: 1;
+    transform: translateY(0%);
+}
 
-// .fade-exit-done {
-//     transform: translateY(-90%);
-//     opacity: 0;
-// }
+.bad-word-exit {
+    opacity: 0;
+    transform: translateY(20%);
+
+}
+
+.bad-word-exit.bad-word-exit.active {
+    opacity: 0;
+    transform: translateY(20%);
+}
+
+.bad-word-exit-done {
+    transform: translateY(20%);
+    opacity: 0;
+}
