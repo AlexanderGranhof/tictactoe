@@ -1,0 +1,145 @@
+div.lobby {
+    position: fixed;
+    width: 75vmin;
+    // height: 75vmin;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 50px 80px;
+
+    box-shadow:
+    0 2.8px 2.2px rgba(0, 0, 0, 0.014),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.018),
+    0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.012),
+    0 41.8px 33.4px rgba(0, 0, 0, 0.016),
+    0 100px 80px rgba(0, 0, 0, 0.05);
+
+    .welcome-user {
+        color: var(--light-black);
+        font-weight: lighter;
+        font-size: 3rem;
+        text-align: center;
+        margin: 0;
+        margin-bottom: 60px;
+    }
+
+    .tables {
+        display: grid;
+    }
+
+    span.username {
+        text-transform: capitalize;
+    }
+}
+
+.lobbies {
+    overflow-y: scroll;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    thead {
+        background-color: var(--blue);
+        color: white;
+        text-align: left;
+
+        tr {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+            padding-right: 16px;
+        }
+    }
+
+    tbody {
+        display:block;
+        max-height: 25vmin;
+        overflow-y: scroll;
+    }
+    
+    tbody tr {
+        transition: background-color 120ms ease-out;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+
+        &:hover {
+            cursor: pointer;
+            background-color: var(--light-gray);
+        }
+    }
+
+}
+
+main.page.lobbies-fade {
+    opacity: 1;
+    z-index: 1;
+
+    &.page-fade-enter {
+        opacity: 0;
+        transition: opacity 300ms;
+    }
+
+    &.page-fade-enter-active {
+        opacity: 1;
+
+    }
+
+    &.page-fade-enter-done {
+        opacity: 1;
+    }
+
+    &.page-fade-exit {
+        .lobby {
+            opacity: 1;
+            top: 20%;
+        }
+    }
+    
+    &.page-fade-exit.page-fade-exit-active {
+        .lobby {
+            transition: opacity 300ms, top 300ms;
+            opacity: 0;
+            top: 15%;
+        }
+    }
+}
+
+.no-rooms-text {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 20px 0;
+    color: var(--dark-gray);
+}
+
+.two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 80px;
+}
+
+span {
+    &.hint {
+        margin: 10px 0;
+        display: block;
+    }
+
+    &.center {
+        text-align: center;
+    }
+
+    &.left {
+        text-align: left;
+    }
+
+    &.right {
+        text-align: right;
+    }
+
+    &.light {
+        font-size: 12px;
+        color: var(--dark-gray);
+    }
+
+}
