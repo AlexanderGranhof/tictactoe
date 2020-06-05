@@ -5,6 +5,7 @@ import { userContext } from "../../context/user";
 import { CSSTransition } from "react-transition-group";
 import "./Lobby.scss";
 import { RouteComponentProps } from "react-router-dom";
+import Input from "../../components/Input/Input";
 
 const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     const [userState] = useContext(userContext);
@@ -87,11 +88,8 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
                 <div className="two-col-grid">
                     <div className="controls">
                         <span className="left light hint">search rooms or play against a bot</span>
+                        <Input id="room-filter" label="search rooms" onKeyDown={handleRoomsFilter} />
                         <button className="large blue" onClick={handleRoomCreate}>Create Room</button>
-                        <div className="input-container">
-                            <input spellCheck={false} placeholder=" " id="filter-rooms" onKeyUp={handleRoomsFilter} type="text"/>
-                            <label htmlFor="filter-rooms">search for a room</label>
-                        </div>
                     </div>
                     <div className="tables">
                         <span className="right light hint">select a room to join</span>
