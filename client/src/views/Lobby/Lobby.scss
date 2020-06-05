@@ -39,6 +39,7 @@ div.lobby {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
+    border: 1px solid var(--light-gray);
 
     thead {
         background-color: var(--blue);
@@ -142,4 +143,36 @@ span {
         color: var(--dark-gray);
     }
 
+}
+
+.table-row {
+    display: block;
+}
+
+.table-row-appear,
+.table-row-enter {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    z-index: 1;
+}
+
+.table-row-appear-active,
+.table-row-enter.table-row-enter-active {
+    max-height: 100px;
+    opacity: 1;
+    transition: all 1s;
+}
+
+.table-row-exit {
+    opacity: 1;
+}
+
+.table-row-exit.table-row-exit-active {
+    opacity: 0;
+    transition: all 1s;
+}
+
+.table-row-exit-done {
+    opacity: 0;
 }

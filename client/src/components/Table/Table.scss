@@ -1,35 +1,3 @@
-.table-row {
-    display: block;
-}
-
-.table-row-appear,
-.table-row-enter {
-    display: block;
-    max-height: 0;
-    opacity: 0;
-    z-index: 1;
-}
-
-.table-row-appear-active,
-.table-row-enter.table-row-enter-active {
-    max-height: 100px;
-    opacity: 1;
-    transition: all 300ms;
-}
-
-.table-row-exit {
-    opacity: 1;
-}
-
-.table-row-exit.table-row-exit-active {
-    opacity: 0;
-    transition: all 150ms ease-in-out;
-}
-
-.table-row-exit-done {
-    opacity: 0;
-}
-
 .table-component {
     border-collapse: collapse;
     
@@ -38,7 +6,7 @@
         font-size: 14px;
     }
     
-    tr {
+    tr:not(:last-child) {
         border-bottom: 1px solid #f0f0f0;
     }
 
