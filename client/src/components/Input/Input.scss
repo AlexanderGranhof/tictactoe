@@ -9,6 +9,7 @@
         border: none;
         border-bottom: 1px solid var(--dark-gray);
         outline: none;
+        margin-bottom: 1px;
 
         & + label {
             font-size: 14px;
@@ -26,6 +27,7 @@
     & input:focus {
         border: none;
         border-bottom: 2px solid var(--blue);
+        margin-bottom: 0px;
     }
 
     &:focus-within input + label,
@@ -33,7 +35,7 @@
         font-size: 12px;
         background-color: white;
         border-radius: 5px;
-        color: var(--black);
+        color: var(--light-black);
         margin: 0;
         top: -11px;
         transform: translateY(0%);
