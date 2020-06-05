@@ -12,7 +12,7 @@ export default (socket: Socket, server: Server) => {
     socket.join("lobby");
 
     socket.on("create_room", (data: any) => {
-        const room = handler.createLobby({ hostName: data.name, hostSocketId: socket.id });
+        const room = handler.createLobby({ hostname: data.name, hostSocketId: socket.id });
         log("got room", room)
 
         server.in("lobby").emit("room_created", room)

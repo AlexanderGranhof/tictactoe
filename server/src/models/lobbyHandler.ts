@@ -1,20 +1,20 @@
 interface LobbyConstructor {
     id: string,
     hostSocketId: string,
-    hostName: string
+    hostname: string
 }
 
 class Room {
     id: string;
     createdAt: Date;
     hostSocketId: string;
-    hostName: string;
+    hostname: string;
 
-    constructor({id, hostSocketId, hostName}: LobbyConstructor) {
+    constructor({id, hostSocketId, hostname}: LobbyConstructor) {
         this.id = id;
         this.createdAt = new Date();
         this.hostSocketId = hostSocketId;
-        this.hostName = hostName;
+        this.hostname = hostname;
     }
 }
 
@@ -47,14 +47,14 @@ class LobbyHandler {
         return Object.keys(this.lobbies).includes(id);
     }
 
-    createLobby({hostSocketId, hostName} : {hostSocketId: string, hostName: string}): Room {
+    createLobby({hostSocketId, hostname} : {hostSocketId: string, hostname: string}): Room {
         let id = LobbyHandler.generateLobbyID();
 
         while (this.lobbyExists(id)) {
             id = LobbyHandler.generateLobbyID();
         }
         
-        const lobby = new Room({ id, hostSocketId, hostName });
+        const lobby = new Room({ id, hostSocketId, hostname });
 
         this.lobbies[id] = lobby;
 
