@@ -161,7 +161,7 @@ span {
 .table-row-enter.table-row-enter-active {
     max-height: 100px;
     opacity: 1;
-    transition: all 1s;
+    transition: all 300ms;
 }
 
 .table-row-exit {
@@ -170,7 +170,7 @@ span {
 
 .table-row-exit.table-row-exit-active {
     opacity: 0;
-    transition: all 1s;
+    transition: all 300ms;
 }
 
 .table-row-exit-done {
