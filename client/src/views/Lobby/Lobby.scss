@@ -1,7 +1,7 @@
 div.lobby {
     position: fixed;
     width: 75vmin;
-    // height: 75vmin;
+    height: 50vmin;
     top: 20%;
     left: 50%;
     transform: translateX(-50%);
@@ -121,7 +121,7 @@ main.page.lobbies-fade {
 
 span {
     &.hint {
-        margin: 10px 0;
+        margin: 20px 0;
         display: block;
     }
 
@@ -142,4 +142,47 @@ span {
         color: var(--dark-gray);
     }
 
+}
+
+.input-container {
+    position: relative;
+    margin: 20px 0;
+
+    input {
+        width: 100%;
+        padding: 15px 10px 5px 10px;
+        color: var(--black);
+        border: none;
+        border-bottom: 1px solid var(--dark-gray);
+        outline: none;
+
+        & + label {
+            font-size: 14px;
+            padding: 5px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 5px;
+            transition: all 200ms;
+            color: var(--dark-gray);
+            cursor: text;
+        }
+    }
+
+    & input:focus {
+        border: none;
+        border-bottom: 2px solid var(--blue);
+    }
+
+    &:focus-within input + label,
+    & input:not(:placeholder-shown) + label {
+        font-size: 12px;
+        background-color: white;
+        border-radius: 5px;
+        color: var(--black);
+        margin: 0;
+        top: -11px;
+        transform: translateY(0%);
+    }
+    
 }
