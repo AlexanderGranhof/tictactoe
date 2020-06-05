@@ -1,13 +1,19 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, CSSProperties } from "react";
+import { CSSTransition } from "react-transition-group";
+import "./Table.scss";
 
 interface TableProps {
-    data: [{}],
+    keyIndex?: string,
+    data: any[],
+    style?: CSSProperties
+    rowClass?: (row: any, column: any) => void
+    rowClick?: (row: any, column: any) => void
     columns: [
         {
-            title: String,
-            index: String,
+            title: string,
+            index: string,
             key?: string,
-            render?: (row: any) => void
+            render?: (row: any, column: any) => void
         }
     ]
 }
@@ -15,40 +21,57 @@ interface TableProps {
 const Table: FunctionComponent<TableProps> = props => {
     const columns = props.columns || [];
     const data = props.data || [];
+    const { keyIndex, rowClass, rowClick } = props;
 
     return (
-        <table>
-            <tr>
-                { columns.map(row =>  <th>{row.title}</th> ) }
-            </tr>
+        <table style={props.style} className="table-component">
+            <thead>
+                <tr key={123}>
+                    { columns.map((row, index) => {
+                        return <th key={row.index}>{row.title}</th> 
+                    }) }
+                </tr>
+            </thead>
             <tbody>
                 {
-                    data.map(row => (
-                        <tr>
-                            {
-                                columns.map(({ key, index, render }) => { 
-                                    const renderMethod = typeof render === "function" ? render : false;
-                                    const dataIndex = typeof index === "undefined" ? index : false;
+                    data.map((row: any) => (
+                            <tr key={keyIndex && row[keyIndex]}>
+                                {
+                                    columns.map((column, rowIndex) => {
+                                        const { key, index, render } = column;
+                                        const renderMethod = typeof render === "function" ? render : false;
+                                        const dataIndex = typeof index !== "undefined" ? index : false;
 
-                                    if (renderMethod === false && dataIndex === false) {
-                                        console.warn("index is", index);
-                                        console.warn("render is", render);
+                                        if (renderMethod === false && dataIndex === false) {
+                                            console.warn("index is", index);
+                                            console.warn("render is", render);
 
-                                        throw new Error(`column is missing index or render method`);
-                                    }
+                                            throw new Error(`column is missing index or render method`);
+                                        }
 
-                                    let value: any = "";
+                                        let value: any = "";
+                                        let rowProps: any = {};
 
-                                    if (renderMethod) {
-                                        value = renderMethod(row)
-                                    } else if (dataIndex) {
-                                        value = row[dataIndex]
-                                    }
+                                        if (renderMethod) {
+                                            value = renderMethod(row, column)
+                                        } else if (dataIndex) {
+                                            value = row[dataIndex]
+                                        }
 
-                                    return ( <td key={key}>{ value }</td> );
-                                })
-                            }
-                        </tr>
+                                        if (typeof rowClass === "function") {
+                                            rowProps.className = rowClass(row, column)
+                                        }
+
+                                        if (typeof rowClick === "function") {
+                                            rowProps.onClick = () => rowClick(row, column)
+                                        }
+
+                                        const rowKey = keyIndex ? row[keyIndex] : key === undefined ? rowIndex : row[key]
+
+                                        return ( <td {...rowProps} key={rowKey}>{ value }</td> );
+                                    })
+                                }
+                            </tr>
                         )
                     )
                 }
