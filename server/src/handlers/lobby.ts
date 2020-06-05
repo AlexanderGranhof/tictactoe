@@ -11,13 +11,15 @@ export default (socket: Socket, server: Server) => {
     log("attaching lobby stuff")
     socket.join("lobby");
 
-    socket.on("create_room", (data: any) => {
-        const room = handler.createLobby({ hostname: data.name, hostSocketId: socket.id });
+    socket.on("create_room", (user: any, cb) => {
+        const room = handler.createLobby({ hostname: user.name, hostSocketId: socket.id });
         log("got room", room)
 
         server.in("lobby").emit("room_created", room)
 
         socket.emit("created_room", room);
+
+        cb(room);
     });
 
     socket.on("get_clients", cb => cb(handler.getLobbies()))
