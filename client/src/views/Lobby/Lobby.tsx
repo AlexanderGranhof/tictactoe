@@ -9,21 +9,28 @@ import { RouteComponentProps } from "react-router-dom";
 const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     const [userState] = useContext(userContext);
     const [rooms, setRooms] = useState({});
+    const [ filteredRooms, setFilteredRooms ] = useState({});
     const { history } = props;
 
-    useEffect(() => {
+    const cleanup = () => {
         socket.off("room_created");
+    }
 
+    useEffect(() => {
         socket.on("room_created", (room: any) => {
             console.log("setting rooms")
             setRooms({ ...rooms, [room.id]: room })
         });
+
+        return cleanup;
     }, [rooms]);
 
     useEffect(() => void socket.emit("get_clients", setRooms), [])
 
     const handleRoomCreate = () => {
-        socket.emit("create_room", userState)
+        socket.emit("create_room", userState, (room: any) => {
+            history.push(`/room/${room.id}`)
+        });
     };
 
     const render = (row: any, column: any) => {
@@ -49,26 +56,54 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
         )
     }
 
+    const handleRoomsFilter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        const isEnter = event.key === "Enter";
+        const search = event.currentTarget.value.toLowerCase();
+
+        // if (isEnter) {
+            if (search === "") {
+                return setFilteredRooms({});
+            }
+
+            const filteredRooms = Object.entries(rooms).reduce((prev, row) => {
+                const [key, value]: [string, any] = row;
+                const name = value.hostname.toLowerCase();
+
+                if (name.includes(search)) {
+                    return {...prev, [key]: value}
+                }
+
+                return prev;
+            }, {});
+
+            setFilteredRooms(filteredRooms);
+        // }
+    }
+
     return (
         <main className="page lobbies-fade">
             <div className="lobby">
                 <h1 className="welcome-user">Welcome <span className="username">{userState.name}</span></h1>
                 <div className="two-col-grid">
+                    <div className="controls">
+                        <span className="left light hint">search rooms or play against a bot</span>
+                        <button className="large blue" onClick={handleRoomCreate}>Create Room</button>
+                        <div className="input-container">
+                            <input spellCheck={false} placeholder=" " id="filter-rooms" onKeyUp={handleRoomsFilter} type="text"/>
+                            <label htmlFor="filter-rooms">search for a room</label>
+                        </div>
+                    </div>
                     <div className="tables">
-                        <span className="left light hint">select a room to join</span>
+                        <span className="right light hint">select a room to join</span>
                         <Table
                             emptyComponent={noRoomsComponent}
                             className="lobbies"
                             rowClick={handleRowClick}
-                            data={Object.values(rooms)}
+                            data={Object.keys(filteredRooms).length ? Object.values(filteredRooms) : Object.values(rooms)}
                             sort={(a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()}
                             rowKeyIndex="id"
                             columns={[{ title: "room", key: "id", index: "id", render }, { title: "name", key: "hostname", index: "hostname", render }]}
                         />
-                    </div>
-                    <div className="controls">
-                        <span className="right light hint">search rooms or play against a bot</span>
-                        <button onClick={handleRoomCreate}>create room</button>
                     </div>
                 </div>
             </div>
