@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { UserProvider } from "./context/user";
 
-import Grid from "./components/grid/Grid";
-
 import Lobby from "./views/Lobby/Lobby";
 import Home from "./views/Home/Home";
+import Room from "./views/Room/Room";
 
 function App() {
     return (
@@ -26,6 +25,8 @@ function App() {
                             <Switch location={location}>
                                 <Route exact path="/" component={Home} />
                                 <Route exact path="/lobbies" component={Lobby} />
+                                <Route exact path="/room" render={() => <Redirect to="/lobbies" />} />
+                                <Route exact path="/room/:id" component={Room} />
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>
