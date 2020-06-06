@@ -1,7 +1,17 @@
+import { Socket } from "socket.io";
+
 interface LobbyConstructor {
     id: string,
     hostSocketId: string,
     hostname: string
+}
+
+class Client {
+    id: string;
+
+    constructor({ id }: {id: string}) {
+        this.id = id;
+    }
 }
 
 class Room {
@@ -9,12 +19,36 @@ class Room {
     createdAt: Date;
     hostSocketId: string;
     hostname: string;
+    private sockets: Client[];
 
     constructor({id, hostSocketId, hostname}: LobbyConstructor) {
         this.id = id;
         this.createdAt = new Date();
         this.hostSocketId = hostSocketId;
         this.hostname = hostname;
+        this.sockets = [];
+    }
+
+    addClient(clientSocket: Socket) {
+        if (this.sockets.length >= 2) {
+            throw new Error("cannot add more sockets to this room")
+        }
+
+        this.sockets.push(new Client(clientSocket));
+    }
+
+    removeClient(client: Socket): Client | undefined {
+        const index = this.sockets.findIndex(socket => socket.id === client.id);
+        
+        return this.sockets.splice(index, 1).shift();
+    }
+
+    isFull() {
+        return this.sockets.length >= 2;
+    }
+
+    isEmpty() {
+        return this.sockets.length === 0;
     }
 }
 
@@ -43,14 +77,14 @@ class LobbyHandler {
         return roomID;
     }
 
-    lobbyExists(id: string) {
+    roomExists(id: string) {
         return Object.keys(this.lobbies).includes(id);
     }
 
     createLobby({hostSocketId, hostname} : {hostSocketId: string, hostname: string}): Room {
         let id = LobbyHandler.generateLobbyID();
 
-        while (this.lobbyExists(id)) {
+        while (this.roomExists(id)) {
             id = LobbyHandler.generateLobbyID();
         }
         
@@ -62,7 +96,7 @@ class LobbyHandler {
     }
 
     removeLobby(id: string) {
-        const lobbyExists = this.lobbyExists(id);
+        const lobbyExists = this.roomExists(id);
 
         if (lobbyExists) {
             delete this.lobbies[id]
@@ -74,6 +108,29 @@ class LobbyHandler {
     getLobbies() {
         return this.lobbies;
     }
+
+    removeClient(socket: Socket, roomID: string) {
+        if (this.roomExists(roomID)) {
+            const lobby = this.lobbies[roomID];
+            const removedClient =  lobby.removeClient(socket);
+    
+            return removedClient
+        }
+
+        return false
+    }
+
+    roomIsEmpty(room: string) {
+        return this.lobbies[room].isEmpty();
+    }
+
+    roomIsFull(room: string) {
+        return this.lobbies[room].isFull();
+    }
+
+    addClient(socket: Socket, room: string) {
+        this.lobbies[room].addClient(socket);
+    }
 }
 
-export default LobbyHandler
+export default new LobbyHandler();
