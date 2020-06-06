@@ -80,6 +80,10 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
         setFilteredRooms(filteredRooms);
     }
 
+    const sortRoomsByDate = (a: any, b: any) =>  {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    }
+
     return (
         <main className="page lobbies-fade">
             <div className="lobby">
@@ -97,7 +101,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
                             className="lobbies"
                             rowClick={handleRowClick}
                             data={roomSearch.length ? Object.values(filteredRooms) : Object.values(rooms)}
-                            sort={(a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()}
+                            sort={sortRoomsByDate}
                             rowKeyIndex="id"
                             columns={[{ title: "room", key: "id", index: "id", render }, { title: "name", key: "hostname", index: "hostname", render }]}
                         />
