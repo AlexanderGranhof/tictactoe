@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Dispatch, SetStateAction, FunctionComponent } from "react";
 import Game, { Board, Player, Opponent, Empty } from "../../game/Game";
 import socket from "../../models/socket";
-import GameState from "../../models/game";
 import "./Grid.scss";
 import { CSSTransition } from "react-transition-group";
 
