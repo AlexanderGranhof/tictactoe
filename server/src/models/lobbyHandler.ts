@@ -6,6 +6,56 @@ interface LobbyConstructor {
     hostname: string
 }
 
+interface GameStateProps {
+    board?: number[]
+    currentTurn: string
+}
+
+class GameState {
+    board: number[];
+    currentTurn: string;
+    firstMovePlayer: string;
+    secondMovePlayer: string;
+    playerValues: any;
+
+    constructor({ board, currentTurn }: GameStateProps) {
+        this.board = board || [-1, -1, -1, -1, -1, -1, -1, -1, -1];
+
+        this.currentTurn = currentTurn;
+        this.firstMovePlayer = currentTurn;
+        this.secondMovePlayer = "";
+        this.playerValues = {
+            [currentTurn]: 1
+        }
+    }
+
+    setCurrentTurn(socketID: string) {
+        this.currentTurn = socketID;
+    }
+
+    setSecondPlayer(socketID: string) {
+        this.secondMovePlayer = socketID;
+        this.playerValues[socketID] = 2;
+    }
+
+    makeMove(index: number, socketID: string) {
+        const moveNumber = this.currentTurn === this.firstMovePlayer ? 1 : 0;
+
+        if (index < 0 || index > 8) {
+            throw new Error(`invalid move to position ${index}`)
+        }
+
+        if (socketID === this.currentTurn) {
+            if (this.board[index] !== -1) {
+                throw new Error(`cannot make move to non-empty square`)
+            }
+
+            this.board[index] = moveNumber;
+            this.currentTurn = this.currentTurn === this.firstMovePlayer ? this.secondMovePlayer : this.firstMovePlayer;
+        }
+    }
+}
+
 class Client {
     id: string;
 
@@ -19,6 +69,7 @@ class Room {
     createdAt: Date;
     hostSocketId: string;
     hostname: string;
+    state: GameState;
     private sockets: Client[];
 
     constructor({id, hostSocketId, hostname}: LobbyConstructor) {
@@ -27,11 +78,16 @@ class Room {
         this.hostSocketId = hostSocketId;
         this.hostname = hostname;
         this.sockets = [];
+        this.state = new GameState({ currentTurn: hostSocketId })
     }
 
     addClient(clientSocket: Socket) {
         if (this.sockets.length >= 2) {
             throw new Error("cannot add more sockets to this room")
+        }
+
+        if (this.state.firstMovePlayer !== clientSocket.id) {
+            this.state.setSecondPlayer(clientSocket.id);
         }
 
         this.sockets.push(new Client(clientSocket));
@@ -108,6 +164,10 @@ class LobbyHandler {
     getRooms() {
         return this.lobbies;
     }
+
+    getRoomState(id: string) {
+        return this.lobbies[id].state;
+    } 
 
     removeClient(socket: Socket, roomID: string) {
         if (this.roomExists(roomID)) {
