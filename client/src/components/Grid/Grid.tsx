@@ -27,7 +27,7 @@ interface GridProps {
 const Grid: FunctionComponent<GridProps> = props => {
     const [ game, setGame ]: [Game | undefined, Dispatch<SetStateAction<Game | undefined>>] = useState();
     const [ grid, setGrid ]: [ Array<Empty | Player | Opponent>, Dispatch<SetStateAction<Array<Empty | Player | Opponent>>> ] = useState([-1, -1, -1, -1, -1, -1, -1, -1, -1] as Array<Empty | Player | Opponent>);
-
+    const [ hasAnnouncedWinner, setHasAnnouncedWinner ] = useState(false);
     const { state } = props;
 
     // [GameState | undefined, Dispatch<SetStateAction<GameState | undefined>>]
@@ -42,15 +42,15 @@ const Grid: FunctionComponent<GridProps> = props => {
     const checkAndAlertWinner = () => {
         const winner = Board.checkWinner(state.board);
 
-        if (winner === null) {
+        if (winner === null || (state.completed && hasAnnouncedWinner)) {
             return
         }
 
-        if (winner === state.playerValues[socket.id]) {
-            return alert("You won!")
-        }
+        const playerIsWinner = winner === state.playerValues[socket.id];
 
-        return alert("You lost!")
+        alert(playerIsWinner ? "You won!" : "You Lost!")
+
+        setHasAnnouncedWinner(true);
     }
 
     const handleSquareClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
