@@ -16,18 +16,35 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
 
     const cleanup = () => {
         socket.off("room_created");
+        socket.off("room_removed");
+        socket.off("disconnect");
     }
 
     useEffect(() => {
         socket.on("room_created", (room: any) => {
-            console.log("setting rooms")
             setRooms({ ...rooms, [room.id]: room })
+        });
+
+        socket.on("disconnect", () => {
+            socket.once("connect", () => {
+                socket.emit("get_clients", setRooms)
+            })
+        })
+
+        socket.on("room_removed", (room: string) => {
+            let tempRooms: any = { ...rooms };
+
+            delete tempRooms[room];
+            
+            setRooms(tempRooms);
         });
 
         return cleanup;
     }, [rooms]);
 
-    useEffect(() => void socket.emit("get_clients", setRooms), [])
+    useEffect(() => {
+        socket.emit("get_clients", setRooms)
+    }, [])
 
     const handleRoomCreate = () => {
         socket.emit("create_room", userState, (room: any) => {
