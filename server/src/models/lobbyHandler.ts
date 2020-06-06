@@ -59,7 +59,7 @@ class LobbyHandler {
         this.lobbies = {};
     }
 
-    static generateLobbyID(length: number = 4) {
+    static generateRoomID(length: number = 4) {
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
         const numbers = "0123456789";
     
@@ -81,11 +81,11 @@ class LobbyHandler {
         return Object.keys(this.lobbies).includes(id);
     }
 
-    createLobby({hostSocketId, hostname} : {hostSocketId: string, hostname: string}): Room {
-        let id = LobbyHandler.generateLobbyID();
+    createRoom({hostSocketId, hostname} : {hostSocketId: string, hostname: string}): Room {
+        let id = LobbyHandler.generateRoomID();
 
         while (this.roomExists(id)) {
-            id = LobbyHandler.generateLobbyID();
+            id = LobbyHandler.generateRoomID();
         }
         
         const lobby = new Room({ id, hostSocketId, hostname });
@@ -95,7 +95,7 @@ class LobbyHandler {
         return lobby;
     }
 
-    removeLobby(id: string) {
+    removeRoom(id: string) {
         const lobbyExists = this.roomExists(id);
 
         if (lobbyExists) {
@@ -105,7 +105,7 @@ class LobbyHandler {
         return lobbyExists
     }
 
-    getLobbies() {
+    getRooms() {
         return this.lobbies;
     }
 
