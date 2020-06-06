@@ -18,6 +18,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
         socket.off("room_created");
         socket.off("room_removed");
         socket.off("disconnect");
+        socket.off("connect");
     }
 
     useEffect(() => {
