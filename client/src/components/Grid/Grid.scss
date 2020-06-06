@@ -15,9 +15,9 @@
 
     .square {
         width: 100%;
-        top: 100%;
         border: 1px solid grey;
         transition: all 80ms ease-in-out;
+        position: relative;
 
 
         &:hover {
@@ -26,3 +26,41 @@
         }
     }
 }
+
+.game-icon {
+    transition: all 300ms;
+    display: block;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 100%;
+}
+
+.game-icon-enter {
+    opacity: 0;
+    font-size: 6rem;
+    transition: all 300ms
+
+}
+.game-icon-enter-active {
+    font-size: 10.5rem;
+    opacity: 1;
+    transition: all 300ms
+
+}
+
+.game-icon-enter-done {
+    opacity: 1;
+    font-size: 10rem;
+    transition: all 150ms
+
+}
+// .game-icon-appear-exit {
+//     opacity: 1;
+// }
+// .game-icon-exit-appear-active {
+//     opacity: 0;
+//     transition: opacity 200ms;
+// }
