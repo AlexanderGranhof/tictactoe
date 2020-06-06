@@ -1,7 +1,9 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction, FunctionComponent } from "react";
 import Game, { Board, Player, Opponent, Empty } from "../../game/Game";
+import socket from "../../models/socket";
 import GameState from "../../models/game";
 import "./Grid.scss";
+import { CSSTransition } from "react-transition-group";
 
 const getSquareIcon = (position: -1 | 0 | 1) => {
     switch(position) {
@@ -19,31 +21,45 @@ const getSquareIcon = (position: -1 | 0 | 1) => {
     } 
 }
 
-const a: Array<Player | Opponent | Empty> = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+interface GridProps {
+    state: any
+}
 
-const Grid = () => {
+const Grid: FunctionComponent<GridProps> = props => {
     const [ game, setGame ]: [Game | undefined, Dispatch<SetStateAction<Game | undefined>>] = useState();
     const [ grid, setGrid ]: [ Array<Empty | Player | Opponent>, Dispatch<SetStateAction<Array<Empty | Player | Opponent>>> ] = useState([-1, -1, -1, -1, -1, -1, -1, -1, -1] as Array<Empty | Player | Opponent>);
 
-    const [ state, setState ]: [undefined | GameState, Dispatch<SetStateAction<GameState | undefined>>] = useState();
+    const { state } = props;
 
     // [GameState | undefined, Dispatch<SetStateAction<GameState | undefined>>]
     // [GameState | undefined, SetStateAction<GameState | undefined>]
     useEffect(() => {
-        const game = new Game();
-        const gamestate = new GameState();
-        game.setStartingPlayer(Game.PLAYER);
+        // const game = new Game();
+        // game.setStartingPlayer(isStartingPlayer ? Game.PLAYER : Game.OPPONENT);
 
         setGame(game);
-        setState(gamestate);
     }, []);
 
+    const checkAndAlertWinner = () => {
+        const winner = Board.checkWinner(state.board);
+
+        if (winner === null) {
+            return
+        }
+
+        if (winner === state.playerValues[socket.id]) {
+            return alert("You won!")
+        }
+
+        return alert("You lost!")
+    }
+
     const handleSquareClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        if (!game) return;
+        const isOurTurn = state.currentTurn === socket.id;
 
         const { currentTarget } = event;
 
-        if (game.currentTurn !== Game.PLAYER) {
+        if (!isOurTurn) {
             return console.warn("not your turn yet")
         }
 
@@ -53,8 +69,7 @@ const Grid = () => {
             throw new Error("attribute 'data-position' was not found on clicked element");
         }
 
-        game.setMove(position);
-        setGrid(game.board.positions);
+        socket.emit("move", position);
     };
 
 
@@ -62,8 +77,20 @@ const Grid = () => {
         <main className="page">
             <div className="grid">
                 {
-                    grid.map((postion, index) => (
-                        <div data-position={index} onClick={handleSquareClick} key={index} className="square">{getSquareIcon(postion)}</div>
+                    state.board && state.board.map((postion: any, index: any) => (
+                        <div data-position={index} onClick={handleSquareClick} key={index} className="square">
+                            <CSSTransition
+                                appear={true}
+                                in={getSquareIcon(postion) !== ""}
+                                timeout={300}
+                                onEntered={checkAndAlertWinner}
+                                classNames="game-icon"
+                            >
+                                <span className="game-icon">
+                                    { getSquareIcon(postion) }
+                                </span>
+                            </CSSTransition>
+                        </div>
                     ))
                     
                 }
