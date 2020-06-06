@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import * as game from "../helpers/game";
 
 interface LobbyConstructor {
     id: string,
@@ -17,6 +18,7 @@ class GameState {
     firstMovePlayer: string;
     secondMovePlayer: string;
     playerValues: any;
+    completed: boolean;
 
     constructor({ board, currentTurn }: GameStateProps) {
         this.board = board || [-1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -27,6 +29,7 @@ class GameState {
         this.playerValues = {
             [currentTurn]: 1
         }
+        this.completed = false;
     }
 
     setCurrentTurn(socketID: string) {
@@ -52,6 +55,11 @@ class GameState {
 
             this.board[index] = moveNumber;
             this.currentTurn = this.currentTurn === this.firstMovePlayer ? this.secondMovePlayer : this.firstMovePlayer;
+
+            const hasWinner = game.checkWinner(this.board)
+            const noMoreMoves = this.board.every(square => square !== -1);
+
+            this.completed = !!(hasWinner || noMoreMoves);
         }
     }
 }
