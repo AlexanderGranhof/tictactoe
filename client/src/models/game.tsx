@@ -11,7 +11,6 @@ class GameState {
         
         this.socket.on("connect", () => console.log("connected"));
         this.socket.once("room", (room: string) => {
-            console.log(room);
             this.room = room;
         });
     }
