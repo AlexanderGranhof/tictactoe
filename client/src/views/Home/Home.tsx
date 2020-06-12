@@ -42,7 +42,7 @@ const Home: FunctionComponent<RouteComponentProps> = props => {
         const isBad = isBadWord(name);
 
         if (inputRef.current) {
-            inputRef.current.style.width = `${(name.length + 2) * 28}px`
+            inputRef.current.style.width = `${(name.length + 4) * 36}px`
         }
         
 
@@ -78,7 +78,7 @@ const Home: FunctionComponent<RouteComponentProps> = props => {
                     >
                         <h4 className="error-title">please choose a different name</h4>
                     </CSSTransition>
-                    <input onKeyUp={handleKeydown} ref={inputRef} autoFocus spellCheck={false} className={`welcome-username ${isBadName ? "bad-word" : ""}`} type="text"/>
+                    <input maxLength={20} onKeyUp={handleKeydown} ref={inputRef} autoFocus spellCheck={false} className={`welcome-username ${isBadName ? "bad-word" : ""}`} type="text"/>
                 </div>
             </div>
         </main>

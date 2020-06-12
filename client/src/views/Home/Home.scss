@@ -51,7 +51,7 @@
             padding: 10px;
             width: 52px;
 
-            transition: color 300ms, box-shadow 300ms, width 80ms ease-out;
+            transition: color 300ms, box-shadow 300ms;
 
             &.bad-word {
                 box-shadow: 0 10px 5px -10px var(--red);
