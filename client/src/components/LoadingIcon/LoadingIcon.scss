@@ -98,13 +98,13 @@
     overflow: hidden;
     margin: 50px;
     border: var(--lineWidth) solid #37383f;
-    animation: rotate 2s infinite ease-in-out;
+    animation: rotate 2.5s infinite ease-in-out;
     position: relative;
     display: block;
     margin: 40px auto;
 
     .pointer {
-        animation: pointer-travel 4s infinite;
+        animation: pointer-travel 5s infinite;
         position: absolute;
         top: 0;
         left: 0;
