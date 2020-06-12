@@ -34,22 +34,28 @@ main.page {
     width: 100vw;
 }
 
+.fade-appear,
+.fade-enter,
 .page-fade-appear,
 .page-fade-enter {
     opacity: 0;
     z-index: 1;
 }
 
+.fade-appear-active,
+.fade-enter-active,
 .page-fade-appear-active,
 .page-fade-enter.page-fade-enter-active {
     opacity: 1;
     transition: opacity 300ms linear 150ms;
 }
 
+.fade-exit,
 .page-fade-exit {
     opacity: 1;
 }
 
+.fade-exit.fade-exit-active,
 .page-fade-exit.page-fade-exit-active {
     opacity: 0;
     transition: opacity 150ms linear;
