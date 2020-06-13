@@ -23,18 +23,22 @@ const leaveAllRooms = (socket: Socket, server: Server) => {
 }
 
 export default (socket: Socket, server: Server) => {
-    socket.on("game_join", (room: any, cb: Function) => {
+    socket.on("game_join", ({ room, name }, cb: Function) => {
         const roomExists = handler.roomExists(room);
+
+        console.log(room, name)
 
         let state: any = null;
 
         if (roomExists) {
-            handler.addClient(socket, room);
+            const roomObject = handler.getRoom(room);
+
+            handler.addClient(socket, room, name);
             state = handler.getRoomState(room);
-            server.in("lobby").emit("get_rooms", handler.getRooms())
-            socket.broadcast.to(room).emit("opponent_join", state)
+            server.in("lobby").emit("get_rooms", handler.getAllRooms())
+            socket.broadcast.to(room).emit("opponent_join", {state, room: roomObject})
             
-            return socket.join(room, () => cb({ valid: roomExists, state }));
+            return socket.join(room, () => cb({ valid: roomExists, state, room: roomObject }));
         }
 
         cb({ valid: roomExists, state })
