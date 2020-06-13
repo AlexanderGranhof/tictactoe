@@ -18,6 +18,4 @@ export default (socket: Socket, server: Server) => {
 
         cb(room);
     });
-
-    socket.on("get_clients", cb => cb(handler.getRooms()))
 };

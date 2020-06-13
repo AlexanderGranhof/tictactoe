@@ -31,6 +31,7 @@ export default (socket: Socket, server: Server) => {
         if (roomExists) {
             handler.addClient(socket, room);
             state = handler.getRoomState(room);
+            server.in("lobby").emit("get_rooms", handler.getRooms())
             socket.broadcast.to(room).emit("opponent_join", state)
             
             return socket.join(room, () => cb({ valid: roomExists, state }));
