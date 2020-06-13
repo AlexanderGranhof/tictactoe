@@ -18,7 +18,14 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
         socket.off("room_created");
         socket.off("room_removed");
         socket.off("disconnect");
+        socket.off("get_rooms");
         socket.off("connect");
+    }
+
+    const filterOutFullRooms = (rooms: any) => {
+        return Object.entries(rooms).reduce((prev, [id, room]: [string, any]) => { 
+            return room.sockets.length < 2 ? {...prev, [id]: room}: prev
+        }, {})
     }
 
     useEffect(() => {
@@ -28,7 +35,9 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
 
         socket.on("disconnect", () => {
             socket.once("connect", () => {
-                socket.emit("get_clients", setRooms)
+                socket.emit("get_clients", (rooms: any[]) => {
+                    setRooms(filterOutFullRooms(rooms))
+                })
             })
         })
 
@@ -39,6 +48,10 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
             
             setRooms(tempRooms);
         });
+
+        socket.on("get_rooms", (rooms: any[]) => {
+            setRooms(filterOutFullRooms(rooms))
+        })
 
         return cleanup;
     }, [rooms]);
