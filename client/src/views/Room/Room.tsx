@@ -1,10 +1,32 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState, CSSProperties } from "react";
 import socket from "../../models/socket";
 import { RouteComponentProps } from "react-router-dom";
 import Grid from "../../components/Grid/Grid";
 import LoadingIcon from "../../components/LoadingIcon/LoadingIcon";
 import "./Room.scss";
 import { CSSTransition } from "react-transition-group";
+import CopyText, { CopyTextProps } from "../../components/CopyText/CopyText";
+import { message } from "antd";
+import Alert from "../../components/Alert/Alert";
+
+const CopyTextWithProps = (props: CopyTextProps) => {
+    const CopyStyleProps: CSSProperties = {
+        position: "absolute",
+        left: "50%", 
+        transform: "translateX(-50%)",
+        top: "50%",
+        margin: 0
+    };
+
+    return (
+        <CopyText
+            style={{ ...CopyStyleProps }}
+            onCopy={() => message.success(`Copied the link to this room!`)}
+            hint="copy this link to your friends to join"
+            {...props}
+        />
+    )
+}
 
 const LoadingTextWithIcon = (props: {in: boolean}) => {
     console.log("loading", props)
@@ -23,9 +45,7 @@ const LoadingTextWithIcon = (props: {in: boolean}) => {
     )
 };
 
-const FadeGrid = (props: { state: any, in: boolean }) => {
-    console.log("grid", props)
-
+const FadeGrid = (props: { state: any, in: boolean, onGameOver: (winner: boolean) => void }) => {
     return (
         <CSSTransition
             in={props.in}
@@ -42,6 +62,7 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const { match, history } = props;
     const { id } = match.params as any;
     const [ gameState, setGameState ] = useState<any>({});
+    const [ alertNotification, setAlertNotification ] = useState({ show: false, message: "", className: "" })
 
     const onViewLeave = () => {
         socket.off("game_state");
@@ -74,10 +95,21 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
 
     const showLoading = !(gameState.board && gameState.secondMovePlayer);
 
+    const handleGameOver = (isWinner: boolean) => {
+        console.log("got gameover", isWinner)
+        const winMessage = `You won against your opponent!`
+        const lossMessage = `You lost against your opponent.`
+
+        setAlertNotification({ message: isWinner ? winMessage : lossMessage, show: true, className: isWinner ? "green" : "red" })
+    };
+
+
     return (
         <main className="page">
+            <Alert onClose={() => history.push("/lobbies")} className={alertNotification.className} show={alertNotification.show} message={alertNotification.message} />
             <LoadingTextWithIcon in={showLoading} />
-            <FadeGrid in={!showLoading} state={gameState} />
+                { showLoading && <CopyTextWithProps text={window.location.href} /> }
+            <FadeGrid onGameOver={handleGameOver} in={!showLoading} state={gameState} />
         </main>
     )
 };
