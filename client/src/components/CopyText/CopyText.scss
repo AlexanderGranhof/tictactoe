@@ -23,4 +23,13 @@
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
     }
+
+    .hint-message {
+        grid-column: 1 / span 2;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 12px;
+        opacity: 0.8;
+    }
 }
