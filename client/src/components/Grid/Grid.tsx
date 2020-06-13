@@ -21,14 +21,15 @@ const getSquareIcon = (position: -1 | 0 | 1) => {
 }
 
 interface GridProps {
-    state: any
+    state: any,
+    onGameOver: (isWinner: boolean) => void
 }
 
 const Grid: FunctionComponent<GridProps> = props => {
     const [ game, setGame ]: [Game | undefined, Dispatch<SetStateAction<Game | undefined>>] = useState();
     const [ grid, setGrid ]: [ Array<Empty | Player | Opponent>, Dispatch<SetStateAction<Array<Empty | Player | Opponent>>> ] = useState([-1, -1, -1, -1, -1, -1, -1, -1, -1] as Array<Empty | Player | Opponent>);
     const [ hasAnnouncedWinner, setHasAnnouncedWinner ] = useState(false);
-    const { state } = props;
+    const { state, onGameOver } = props;
 
     // [GameState | undefined, Dispatch<SetStateAction<GameState | undefined>>]
     // [GameState | undefined, SetStateAction<GameState | undefined>]
@@ -48,7 +49,7 @@ const Grid: FunctionComponent<GridProps> = props => {
 
         const playerIsWinner = winner === state.playerValues[socket.id];
 
-        alert(playerIsWinner ? "You won!" : "You Lost!")
+        typeof onGameOver === "function" && onGameOver(playerIsWinner)
 
         setHasAnnouncedWinner(true);
     }
@@ -68,7 +69,7 @@ const Grid: FunctionComponent<GridProps> = props => {
             throw new Error("attribute 'data-position' was not found on clicked element");
         }
 
-        socket.emit("move", position);
+        !state.completed && socket.emit("move", position);
     };
 
 
