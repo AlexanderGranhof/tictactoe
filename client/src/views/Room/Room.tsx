@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useEffect, useState, CSSProperties } from "react";
+import React, { FunctionComponent, useEffect, useState, CSSProperties, useContext } from "react";
 import socket from "../../models/socket";
 import { RouteComponentProps } from "react-router-dom";
 import Grid from "../../components/Grid/Grid";
 import LoadingIcon from "../../components/LoadingIcon/LoadingIcon";
+import { userContext } from "../../context/user";
 import "./Room.scss";
 import { CSSTransition } from "react-transition-group";
 import CopyText, { CopyTextProps } from "../../components/CopyText/CopyText";
@@ -62,7 +63,11 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const { match, history } = props;
     const { id } = match.params as any;
     const [ gameState, setGameState ] = useState<any>({});
-    const [ alertNotification, setAlertNotification ] = useState({ show: false, message: "", className: "" })
+    const [ room, setRoom ] = useState<any>({});
+    const [ alertNotification, setAlertNotification ] = useState({ show: false, message: "", className: "" });
+    const [ userState, setUserState ] = useContext(userContext);
+
+    console.log(userState, gameState);
 
     const onViewLeave = () => {
         socket.off("game_state");
@@ -72,13 +77,14 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     };
 
     useEffect(() => {
-        socket.emit("game_join", id, (roomData: any) => {
-            const { valid, state } = roomData;
+        socket.emit("game_join", {room: id, name: userState.name}, (roomData: any) => {
+            const { valid, state, room } = roomData;
 
             if (!valid) {
                 return history.push("/lobbies")
             }
 
+            setRoom(room);
             setGameState(state);
         });
 
@@ -86,7 +92,9 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
 
         socket.on("move_error", (msg: string) => alert(msg));
 
-        socket.once("opponent_join", (state: any) => {
+        socket.once("opponent_join", ({ state, room }: any) => {
+            console.log(room);
+            setRoom(room);
             setGameState(state)
         })
 
@@ -96,9 +104,12 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const showLoading = !(gameState.board && gameState.secondMovePlayer);
 
     const handleGameOver = (isWinner: boolean) => {
-        console.log("got gameover", isWinner)
-        const winMessage = `You won against your opponent!`
-        const lossMessage = `You lost against your opponent.`
+        console.log("got gameover", isWinner);
+
+        const opponentName = room.sockets.find((client: any) => client.id !== socket.id).name || "your opponent";
+
+        const winMessage = `You won against ${opponentName}!`
+        const lossMessage = `You lost against ${opponentName}.`
 
         setAlertNotification({ message: isWinner ? winMessage : lossMessage, show: true, className: isWinner ? "green" : "red" })
     };
