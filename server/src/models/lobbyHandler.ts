@@ -64,11 +64,18 @@ class GameState {
     }
 }
 
+interface ClientProps {
+    id: string;
+    name?: string;
+}
+
 class Client {
     id: string;
-
-    constructor({ id }: {id: string}) {
+    name: string;
+    
+    constructor({ id }: ClientProps, name: any) {
         this.id = id;
+        this.name = name || "opponent";
     }
 }
 
@@ -89,7 +96,7 @@ class Room {
         this.state = new GameState({ currentTurn: hostSocketId })
     }
 
-    addClient(clientSocket: Socket) {
+    addClient(clientSocket: Socket, name: any) {
         if (this.sockets.length >= 2) {
             throw new Error("cannot add more sockets to this room")
         }
@@ -98,7 +105,7 @@ class Room {
             this.state.setSecondPlayer(clientSocket.id);
         }
 
-        this.sockets.push(new Client(clientSocket));
+        this.sockets.push(new Client(clientSocket, name));
     }
 
     removeClient(client: Socket): Client | undefined {
@@ -169,8 +176,12 @@ class LobbyHandler {
         return lobbyExists
     }
 
-    getRooms() {
+    getAllRooms() {
         return this.lobbies;
+    }
+
+    getRoom(id: string) {
+        return this.lobbies[id];
     }
 
     getRoomState(id: string) {
@@ -198,8 +209,8 @@ class LobbyHandler {
         return this.lobbies[room].isFull();
     }
 
-    addClient(socket: Socket, room: string) {
-        this.lobbies[room].addClient(socket);
+    addClient(socket: Socket, room: string, name: any) {
+        this.lobbies[room].addClient(socket, name);
     }
 }
 
