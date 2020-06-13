@@ -174,6 +174,7 @@ class LobbyHandler {
     }
 
     getRoomState(id: string) {
+        // fails here sometimes
         return this.lobbies[id].state;
     } 
 
@@ -189,6 +190,7 @@ class LobbyHandler {
     }
 
     roomIsEmpty(room: string) {
+        // this fails sometimes for some reason
         return this.lobbies[room].isEmpty();
     }
 
