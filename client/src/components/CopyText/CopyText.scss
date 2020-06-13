@@ -1,0 +1,26 @@
+.copy-text-container {
+    display: grid;
+    margin: 20px;
+    grid-template-columns: 1fr auto;
+    width: fit-content;
+
+    input {
+        padding: 5px 10px;
+        border: 1px solid rgba(127, 127, 127, 0.5);
+        border-right: none;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        text-align: center;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    button {
+        border: 1px solid rgba(127, 127, 127, 0.5);
+        border-left: none;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}
