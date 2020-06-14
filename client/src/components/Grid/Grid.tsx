@@ -3,6 +3,7 @@ import Game, { Board, Player, Opponent, Empty } from "../../game/Game";
 import socket from "../../models/socket";
 import "./Grid.scss";
 import { CSSTransition } from "react-transition-group";
+import { notification } from "antd"
 
 const getSquareIcon = (position: -1 | 0 | 1) => {
     switch(position) {
@@ -60,7 +61,7 @@ const Grid: FunctionComponent<GridProps> = props => {
         const { currentTarget } = event;
 
         if (!isOurTurn) {
-            return console.warn("not your turn yet")
+            return notification.warning({ message: "TicTacToe", description: "It's not your turn yet"  })
         }
 
         const position = parseInt(currentTarget.dataset.position || "");
