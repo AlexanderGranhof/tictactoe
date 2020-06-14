@@ -1,8 +1,7 @@
 div.lobby {
     position: fixed;
     width: 75vmin;
-    min-height: 70vmin;
-    max-height: calc(100vmin - 25%);
+    height: calc(100vh - 25%);
     top: 20%;
     left: 50%;
     transform: translateX(-50%);
@@ -186,4 +185,25 @@ span {
 
 .table-row-exit-done {
     opacity: 0;
+}
+
+
+@media only screen and (max-width: 650px) {
+    div.lobby {
+        width: 85vw;
+        padding: 25px 40px;
+
+        .welcome-user {
+            font-size: calc(1rem + 5vw);
+        }
+
+        .controls {
+            grid-template-columns: 1fr;
+            place-items: center;
+
+            * {
+                width: 100%
+            }
+        }
+    }
 }

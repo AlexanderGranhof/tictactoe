@@ -115,7 +115,7 @@ nav {
     right: 0;
     display: flex;
     justify-content: space-evenly;
-    z-index: 10000;
+    z-index: 10;
 
     a {
         margin: 0 10px;
@@ -123,5 +123,11 @@ nav {
         font-size: 14px;
         font-weight: bold;
         text-transform: uppercase;
+    }
+}
+
+@media only screen and (max-width: 775px) {
+    span.game-icon {
+        font-size: 18vw;
     }
 }

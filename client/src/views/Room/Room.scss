@@ -1,6 +1,12 @@
 .loading-container {
     position: absolute;
+    width: 100%;
     left: 50%;
     top: 20%;
     transform: translateX(-50%);
+
+    h1 {
+        width: 100%;
+        text-align: center;
+    }
 }
