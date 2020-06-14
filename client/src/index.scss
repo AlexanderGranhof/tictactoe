@@ -39,27 +39,27 @@ main.page {
 .fade-enter,
 .page-fade-appear,
 .page-fade-enter {
-    opacity: 0;
-    z-index: 1;
+    opacity: 0 !important;
+    z-index: 1 !important;
 }
 
 .fade-appear-active,
 .fade-enter-active,
 .page-fade-appear-active,
 .page-fade-enter.page-fade-enter-active {
-    opacity: 1;
-    transition: opacity 300ms linear 150ms;
+    opacity: 1 !important;
+    transition: opacity 300ms linear 150ms !important;
 }
 
 .fade-exit,
 .page-fade-exit {
-    opacity: 1;
+    opacity: 1 !important;
 }
 
 .fade-exit.fade-exit-active,
 .page-fade-exit.page-fade-exit-active {
-    opacity: 0;
-    transition: opacity 150ms linear;
+    opacity: 0 !important;
+    transition: opacity 300ms linear !important;
 }
 
 button {
@@ -106,5 +106,22 @@ button {
         &:hover {
             background-color: #ee5555
         }
+    }
+}
+
+nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-evenly;
+    z-index: 10000;
+
+    a {
+        margin: 0 10px;
+        padding: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 }
