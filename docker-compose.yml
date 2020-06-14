@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  client:
+    build: ./client
+    stdin_open: true
+    ports:
+      - 8080
+    volumes:
+    - ./client/node_modules
+    - ./client/src:/opt/tictactoe-client/src
+  server:
+    build: ./server
+    ports:
+      - 8080
+    volumes:
+      - ./server/node_modules
+      - ./server/src:/opt/tictactoe-server/src
+  nginx:
+    build: ./nginx
+    ports:
+      - 8080:80
+    links:
+      - client:client
+      - server:server
