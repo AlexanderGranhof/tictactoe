@@ -68,8 +68,6 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const [ alertNotification, setAlertNotification ] = useState({ show: false, message: "", className: "" });
     const [ userState, setUserState ] = useContext(userContext);
 
-    console.log(userState, gameState);
-
     const onViewLeave = () => {
         socket.off("game_state");
         socket.off("opponent_join");
@@ -97,7 +95,7 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
 
         socket.on("game_state", (state: any) => setGameState(state))
 
-        socket.on("move_error", (msg: string) => alert(msg));
+        socket.on("move_error", (msg: string) => notification.error({ message: "TicTacToe", description: msg }));
 
         socket.once("opponent_join", ({ state, room }: any) => {
             console.log(room);
@@ -118,13 +116,17 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
         const winMessage = `You won against ${opponentName}!`
         const lossMessage = `You lost against ${opponentName}.`
 
-        setAlertNotification({ message: isWinner ? winMessage : lossMessage, show: true, className: isWinner ? "green" : "red" })
+        if (isWinner) {
+            return message.success(winMessage);
+        }
+
+        return message.error(lossMessage);
     };
 
 
     return (
         <main className="page">
-            <Alert onClose={() => history.push("/lobbies")} className={alertNotification.className} show={alertNotification.show} message={alertNotification.message} />
+            {/* <Alert onClose={() => history.push("/lobbies")} className={alertNotification.className} show={alertNotification.show} message={alertNotification.message} /> */}
             <LoadingTextWithIcon in={showLoading} />
                 { showLoading && <CopyTextWithProps text={window.location.href} /> }
             <FadeGrid onGameOver={handleGameOver} in={!showLoading} state={gameState} />
