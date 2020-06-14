@@ -69,7 +69,7 @@ const Home: FunctionComponent<RouteComponentProps> = props => {
                         appear={true}
                         classNames="myFade"
                     >
-                        <h1 className="welcome-title">Welcome, please enter your name</h1>
+                        <h1 className="welcome-title">Welcome to online TicTacToe, please enter your name</h1>
                     </CSSTransition>
                     <CSSTransition
                         in={isBadName}
