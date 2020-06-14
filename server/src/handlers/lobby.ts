@@ -18,4 +18,8 @@ export default (socket: Socket, server: Server) => {
 
         cb(room);
     });
+
+    socket.on("get_rooms", () => {
+        socket.emit("get_rooms", handler.getAllRooms())
+    });
 };
