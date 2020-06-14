@@ -1,12 +1,14 @@
 div.lobby {
     position: fixed;
     width: 75vmin;
-    height: 50vmin;
+    min-height: 70vmin;
+    max-height: calc(100vmin - 25%);
     top: 20%;
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
     padding: 50px 80px;
+    border: 1px solid rgba(123, 121, 129, 0.05);
 
     box-shadow:
     0 2.8px 2.2px rgba(0, 0, 0, 0.014),
@@ -27,10 +29,19 @@ div.lobby {
 
     .tables {
         display: grid;
+        margin: 20px 0;
     }
 
     span.username {
         text-transform: capitalize;
+    }
+
+    .controls {
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        column-gap: 40px;
+        place-items: baseline;
     }
 }
 
