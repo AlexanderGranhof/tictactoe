@@ -118,25 +118,23 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     return (
         <main className="page lobbies-fade">
             <div className="lobby">
-                <h1 className="welcome-user">Welcome <span className="username">{userState.name}</span></h1>
-                <div className="two-col-grid">
-                    <div className="controls">
-                        <span className="left light hint">search rooms or play against a bot</span>
-                        <Input id="room-filter" label="search rooms" onKeyUp={handleRoomsFilter} />
-                        <button className="large blue" onClick={handleRoomCreate}>Create Room</button>
-                    </div>
-                    <div className="tables">
-                        <span className="right light hint">select a room to join</span>
-                        <Table
-                            emptyComponent={noRoomsComponent}
-                            className="lobbies"
-                            rowClick={handleRowClick}
-                            data={roomSearch.length ? Object.values(filteredRooms) : Object.values(rooms)}
-                            sort={sortRoomsByDate}
-                            rowKeyIndex="id"
-                            columns={[{ title: "room", key: "id", index: "id", render }, { title: "name", key: "hostname", index: "hostname", render }]}
-                        />
-                    </div>
+                <h1 className="welcome-user">Welcome to tictactoe <span className="username">{userState.name}</span>
+                <span style={{ marginTop: 0 }} className="center light hint">You can create, search or join a room using the fields below</span></h1>
+                <div className="controls">
+                    <Input id="room-filter" label="search rooms" onKeyUp={handleRoomsFilter} />
+                    <button className="large blue" onClick={handleRoomCreate}>Create Room</button>
+                </div>
+                <div className="tables">
+                    <Table
+                        style={{ height: "100%" }}
+                        emptyComponent={noRoomsComponent}
+                        className="lobbies"
+                        rowClick={handleRowClick}
+                        data={roomSearch.length ? Object.values(filteredRooms) : Object.values(rooms)}
+                        sort={sortRoomsByDate}
+                        rowKeyIndex="id"
+                        columns={[{ title: "room", key: "id", index: "id", render }, { title: "name", key: "hostname", index: "hostname", render }]}
+                    />
                 </div>
             </div>
         </main>
