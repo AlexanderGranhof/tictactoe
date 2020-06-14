@@ -31,7 +31,6 @@ const CopyTextWithProps = (props: CopyTextProps) => {
 }
 
 const LoadingTextWithIcon = (props: {in: boolean}) => {
-    console.log("loading", props)
     return (
         <CSSTransition
             in={props.in}
@@ -98,7 +97,6 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
         socket.on("move_error", (msg: string) => notification.error({ message: "TicTacToe", description: msg }));
 
         socket.once("opponent_join", ({ state, room }: any) => {
-            console.log(room);
             setRoom(room);
             setGameState(state)
         })
@@ -109,8 +107,6 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const showLoading = !(gameState.board && gameState.secondMovePlayer);
 
     const handleGameOver = (isWinner: boolean) => {
-        console.log("got gameover", isWinner);
-
         const opponentName = room.sockets.find((client: any) => client.id !== socket.id).name || "your opponent";
 
         const winMessage = `You won against ${opponentName}!`

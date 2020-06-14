@@ -26,8 +26,6 @@ export default (socket: Socket, server: Server) => {
     socket.on("game_join", ({ room, name }, cb: Function) => {
         const roomExists = handler.roomExists(room);
 
-        console.log(room, name)
-
         let state: any = null;
 
         if (roomExists) {
