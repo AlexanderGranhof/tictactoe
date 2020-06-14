@@ -74,6 +74,7 @@ button {
     margin: 10px 0;
     cursor: pointer;
     transition: background-color 80ms ease-in;
+    height: fit-content;
 
     &:hover {
         background-color: #e2e2e2;
