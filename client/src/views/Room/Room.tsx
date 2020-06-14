@@ -9,6 +9,7 @@ import { CSSTransition } from "react-transition-group";
 import CopyText, { CopyTextProps } from "../../components/CopyText/CopyText";
 import { message } from "antd";
 import Alert from "../../components/Alert/Alert";
+import { notification } from "antd";
 
 const CopyTextWithProps = (props: CopyTextProps) => {
     const CopyStyleProps: CSSProperties = {
@@ -72,7 +73,8 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
     const onViewLeave = () => {
         socket.off("game_state");
         socket.off("opponent_join");
-        socket.off("move_error")
+        socket.off("move_error");
+        socket.off("opponent_leave");
         socket.emit("game_leave");
     };
 
@@ -86,6 +88,11 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
 
             setRoom(room);
             setGameState(state);
+        });
+
+
+        socket.on("opponent_leave", () => {
+            notification.warning({ message: "Your opponent left the game" });
         });
 
         socket.on("game_state", (state: any) => setGameState(state))
