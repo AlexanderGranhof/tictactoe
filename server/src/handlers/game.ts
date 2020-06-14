@@ -11,13 +11,15 @@ const leaveAllRooms = (socket: Socket, server: Server) => {
 
     rooms.forEach(room => {
         handler.removeClient(socket, room);
+        const isEmpty = handler.roomIsEmpty(room);
 
-        if (handler.roomIsEmpty(room)) {
+        if (isEmpty) {
             handler.removeRoom(room);
             server.in("lobby").emit("room_removed", room);
         }
 
         socket.broadcast.to(room).emit("opponent_leave", socket.id)
+        !isEmpty && socket.broadcast.to(room).emit("game_state", handler.getRoomState(room))
         socket.leave(room);
     })
 }
@@ -28,12 +30,17 @@ export default (socket: Socket, server: Server) => {
 
         let state: any = null;
 
+        console.log("JOINING", roomExists,room)
+
         if (roomExists) {
             const roomObject = handler.getRoom(room);
 
             handler.addClient(socket, room, name);
             state = handler.getRoomState(room);
+
             server.in("lobby").emit("get_rooms", handler.getAllRooms())
+
+            socket.broadcast.to(room).emit("game_state", handler.getRoomState(room))
             socket.broadcast.to(room).emit("opponent_join", {state, room: roomObject})
             
             return socket.join(room, () => cb({ valid: roomExists, state, room: roomObject }));
