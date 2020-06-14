@@ -101,8 +101,16 @@ class Room {
             throw new Error("cannot add more sockets to this room")
         }
 
-        if (this.state.firstMovePlayer !== clientSocket.id) {
-            this.state.setSecondPlayer(clientSocket.id);
+        if (this.state.firstMovePlayer === "") {
+            this.state.firstMovePlayer = clientSocket.id;
+        } else if (this.state.firstMovePlayer !== clientSocket.id) {
+            this.state.secondMovePlayer = clientSocket.id;
+        }
+
+        const currentTurnIsInRoom = this.sockets.some(client => client.id === this.state.currentTurn);
+
+        if (!currentTurnIsInRoom) {
+            this.state.currentTurn = clientSocket.id;
         }
 
         this.sockets.push(new Client(clientSocket, name));
@@ -110,6 +118,10 @@ class Room {
 
     removeClient(client: Socket): Client | undefined {
         const index = this.sockets.findIndex(socket => socket.id === client.id);
+
+        if (this.state.firstMovePlayer === client.id) {
+            this.state.firstMovePlayer = "";
+        }
         
         return this.sockets.splice(index, 1).shift();
     }
