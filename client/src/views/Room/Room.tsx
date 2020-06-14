@@ -89,14 +89,20 @@ const Room: FunctionComponent<RouteComponentProps> = props => {
 
 
         socket.on("opponent_leave", () => {
-            notification.warning({ message: "Your opponent left the game" });
+            const name = room.sockets ? room.sockets.find((client: any) => client.id !== socket.id).name || "your opponent" : "your opponent";
+            notification.warning({ message: "TicTacToe", description: `${name} left the game` });
         });
 
-        socket.on("game_state", (state: any) => setGameState(state))
+        socket.on("game_state", (state: any) => {
+            setGameState(state)
+        })
 
         socket.on("move_error", (msg: string) => notification.error({ message: "TicTacToe", description: msg }));
 
-        socket.once("opponent_join", ({ state, room }: any) => {
+        socket.on("opponent_join", ({ state, room }: any) => {
+            const name = room.sockets.find((client: any) => client.id !== socket.id).name || "your opponent";
+            notification.info({  message: "TicTacToe", description: `${name} joined the game` });
+
             setRoom(room);
             setGameState(state)
         })
