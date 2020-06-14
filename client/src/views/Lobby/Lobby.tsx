@@ -57,7 +57,7 @@ const Lobby: FunctionComponent<RouteComponentProps> = (props) => {
     }, [rooms]);
 
     useEffect(() => {
-        socket.emit("get_clients", setRooms)
+        socket.emit("get_rooms", setRooms)
     }, [])
 
     const handleRoomCreate = () => {
