@@ -17,7 +17,7 @@ const leaveAllRooms = (socket: Socket, server: Server) => {
             server.in("lobby").emit("room_removed", room);
         }
 
-        socket.broadcast.to(room).emit("partner_leave", socket.id)
+        socket.broadcast.to(room).emit("opponent_leave", socket.id)
         socket.leave(room);
     })
 }
