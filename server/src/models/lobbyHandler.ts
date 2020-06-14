@@ -201,8 +201,12 @@ class LobbyHandler {
     }
 
     roomIsEmpty(room: string) {
-        // this fails sometimes for some reason
-        return this.lobbies[room].isEmpty();
+        if (this.roomExists(room)) {
+            // this fails sometimes for some reason without if
+            return this.lobbies[room].isEmpty();
+        }
+
+        return true
     }
 
     roomIsFull(room: string) {
